@@ -12,16 +12,17 @@ def extact_from_fasta(filename):
 
 def split_into_kmers(reads, k_size):
     read_length = len(reads[0])
-    if k_size > read_length or read_length % k_size != 0:
+    if k_size > read_length:
         return None
     else:
         kmers = []
+        r = (read_length - k_size) + 1
         for read in reads:
-            split_set = [read[i:i+k_size] for i in range(0, len(read), k_size)]
-            for k in split_set:
-                kmers.append(k)
+            for i in range(r):
+                kmers.append(read[i:i+k_size])
         kmers.sort()
-        return kmers
+        return set(kmers)
+
 
 # i don't think this works
 def check_for_errors(kmers):
@@ -31,34 +32,14 @@ def check_for_errors(kmers):
             counts[kmer] = 0
         else:
             counts[kmer] = counts[kmer] + 1
-    base = None
     for _, count in counts.items():
-        if base == None:
-            base = count
-        else:
-            if base == count:
-                continue
-            else:
-                return False, counts
+        if count == 0:
+            return False, counts
     return True, counts
 
 
 if __name__ == '__main__':
     # test
     reads = extact_from_fasta('synthetic.noerror.large.fasta')
-    no_split, _ = check_for_errors(reads)
-    if no_split:
-        print('no_split')
-    else:
-        errors = True
-        i = 2
-        while errors:
-            if i == len(reads[0]):
-                break
-            kmers = split_into_kmers(reads, i)
-            if kmers != None:
-                res, counts = check_for_errors(kmers)
-                if res:
-                    errors = False
-            i += 1
+    kmers = split_into_kmers(reads, 10)
     print(kmers)
