@@ -7,6 +7,9 @@ import math
 def do_sample(filename, limit):
     reads = format_data.extact_from_fasta(filename)
     assembly_not_found = True
+    no_errors = False
+    if limit == 'na':
+        no_errors = True
     read_length = len(reads[0])
     i = read_length
     best_contigs_len = math.inf
@@ -15,8 +18,11 @@ def do_sample(filename, limit):
         if i == 1:
             break
         kmers = format_data.split_into_kmers(reads, i)
-        final_kmers = check_errors(kmers, limit)
-        graph = gen_contigs.db_graph(final_kmers)
+        if no_errors:
+            final_kmers = check_errors(kmers, limit)
+            graph = gen_contigs.db_graph(final_kmers)
+        else:
+            graph = gen_contigs.db_graph(kmers)
         degrees = gen_contigs.calc_degrees(graph)
         contigs = gen_contigs.find_non_branching(graph, degrees)
         if len(contigs) < best_contigs_len:
