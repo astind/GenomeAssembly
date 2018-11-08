@@ -21,7 +21,7 @@ def split_into_kmers(reads, k_size):
             for i in range(r):
                 kmers.append(read[i:i+k_size])
         kmers.sort()
-        return set(kmers)
+        return kmers
 
 
 # i don't think this works
