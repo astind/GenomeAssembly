@@ -5,6 +5,7 @@ import math
 
 
 def do_sample(filename, limit):
+    all_contigs = []
     reads = format_data.extact_from_fasta(filename)
     assembly_not_found = True
     errors = True
@@ -12,24 +13,25 @@ def do_sample(filename, limit):
         errors = False
     read_length = len(reads[0])
     i = read_length
-    best_contigs_len = math.inf
-    best_contigs = None
+    #best_contigs_len = math.inf
+    #best_contigs = None
     while assembly_not_found:
         if i == 1:
             break
         kmers = format_data.split_into_kmers(reads, i)
         if errors:
-            final_kmers = check_errors(kmers, limit)
+            final_kmers = check_errors(kmers, int(limit))
             graph = gen_contigs.db_graph(final_kmers)
         else:
             graph = gen_contigs.db_graph(set(kmers))
         degrees = gen_contigs.calc_degrees(graph)
         contigs = gen_contigs.find_non_branching(graph, degrees)
-        if len(contigs) < best_contigs_len:
-            best_contigs_len = len(contigs)
-            best_contigs = contigs
+        all_contigs.append(contigs)
+        #if len(contigs) < best_contigs_len and len(contigs) != 0:
+            #best_contigs_len = len(contigs)
+            #best_contigs = contigs
         i -= 1
-    return best_contigs, best_contigs_len
+    return all_contigs
 
 
 def check_errors(kmers, limit):
@@ -47,16 +49,22 @@ def check_errors(kmers, limit):
 
 
 if __name__ == '__main__':
-    contigs, contigs_len = do_sample(sys.argv[1], sys.argv[2])
-    print(contigs)
-    print(contigs_len)
+    contigs = do_sample(sys.argv[1], sys.argv[2])
     sizes = []
     longest_contig = 0
+    best_set = None
     for contig in contigs:
-        length = len(contig)
-        sizes.append(length)
-        if length > longest_contig:
-            longest_contig = length
-    print(longest_contig)
-    print(sizes)
+        for seq in contig:
+            length = len(seq)
+            if length > longest_contig:
+                longest_contig = length
+                best_set = contig
+
+    print('Longest contig size: ' + str(longest_contig))
+    print('Number of contigs: ' + str(len(best_set)))
+    average = 0
+    for x in best_set:
+        average += len(x)
+    average = average / len(best_set)
+    print('Average Contig size: ' + str(average))
 
