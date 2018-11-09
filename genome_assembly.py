@@ -5,7 +5,7 @@ import math
 
 
 def do_sample(filename, limit):
-    all_contigs = []
+    all_contigs = {}
     reads = format_data.extact_from_fasta(filename)
     assembly_not_found = True
     errors = True
@@ -26,7 +26,7 @@ def do_sample(filename, limit):
             graph = gen_contigs.db_graph(set(kmers))
         degrees = gen_contigs.calc_degrees(graph)
         contigs = gen_contigs.find_non_branching(graph, degrees)
-        all_contigs.append(contigs)
+        all_contigs[i] = contigs
         #if len(contigs) < best_contigs_len and len(contigs) != 0:
             #best_contigs_len = len(contigs)
             #best_contigs = contigs
@@ -53,12 +53,14 @@ if __name__ == '__main__':
     sizes = []
     longest_contig = 0
     best_set = None
-    for contig in contigs:
+    kmer_size = None
+    for kmer, contig in contigs.items():
         for seq in contig:
             length = len(seq)
             if length > longest_contig:
                 longest_contig = length
                 best_set = contig
+                kmer_size = kmer
 
     print('Longest contig size: ' + str(longest_contig))
     print('Number of contigs: ' + str(len(best_set)))
@@ -67,4 +69,7 @@ if __name__ == '__main__':
         average += len(x)
     average = average / len(best_set)
     print('Average Contig size: ' + str(average))
+    print('Kmer size: ' + str(kmer_size))
+    print('Best Set:')
+    print(best_set)
 
