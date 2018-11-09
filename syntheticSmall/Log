@@ -1,0 +1,22 @@
+Wed Nov  7 13:04:15 2018
+ ./velveth /users/guest/s/spj432/Documents/CS418/resultsVelvet 15 /users/guest/s/spj432/Documents/CS418/synthetic.noerror.small.fasta
+Version 1.2.10
+Copyright 2007, 2008 Daniel Zerbino (zerbino@ebi.ac.uk)
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Compilation settings:
+CATEGORIES = 2
+MAXKMERLENGTH = 31
+
+Wed Nov  7 13:04:25 2018
+ ./velvetg /users/guest/s/spj432/Documents/CS418/resultsVelvet -exp_cov auto -cov_cutoff auto
+Version 1.2.10
+Copyright 2007, 2008 Daniel Zerbino (zerbino@ebi.ac.uk)
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Compilation settings:
+CATEGORIES = 2
+MAXKMERLENGTH = 31
+
+Median coverage depth = 6.295082
+Final graph has 4 nodes and n50 of 82, max 122, total 287, using 93/93 reads
